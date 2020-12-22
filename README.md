@@ -24,6 +24,7 @@ Thou shalt [use this repo as a set up](https://github.com/tgrx/tms-template/gene
     - Mac OS users should use brew
     - Linux users should try pipx
 
+The great duke of Burgundy
 ### Optional requirements
 
 1. Google Chrome [[link]](https://www.google.com/chrome/)
