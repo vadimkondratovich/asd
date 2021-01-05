@@ -2,7 +2,7 @@
 # [  INCLUDES  ]
 # override to whatever works on your system
 
-PIPENV := pipenv
+PIPENV := python -m pipenv
 
 include ./Makefile.in.mk
 
