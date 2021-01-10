@@ -19,13 +19,13 @@ def application(environ, start_response):
         b"<!DOCTYPE html>"
         b"<html>"
         b"<head>"
-        b"<title>Alpha</title>"
+        b"<title>Master</title>"
         b'<meta charset="utf-8">'
         b"</head>"
         b"<body>"
         b"<h1>My Project</h1>"
         b"<hr>"
-        b"<p>This is a template project.</p>"
+        b"<p>This is my first project.</p>"
         b"</body>"
         b"</html>"
     )
