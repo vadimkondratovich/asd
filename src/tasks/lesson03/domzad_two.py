@@ -1,31 +1,15 @@
-#from math import sqrt
-#print('Введите коэффициенты')
-#print('ax*2 + bx + c = 0:')
-#a = float(input('a = '))
-#b = float(input('b = '))
-#c = float(input('c = '))
-#D = b**2 - 4 * a * c
-#print(D)
-
-
-#if D > 0:
-#    X1 = (-b + sqrt(D)) / 2
-#   X2 = (-b - sqrt(D)) / 2
-#    print(X1, X2)
-#elif D == 0:
-#    X = -b / (2 * a)
-#    print(X)
-#else:
-#    print('Действительных корней нет')
+#: from math import sqrt
+#: Вычислить квадратное уравнение ax2 + bx + c = 0 (*)
+#: D = b2 – 4ac;
+#: x1,2 = (-b +/- sqrt (D)) / 2a
+#: Предусмотреть 3 варианта:
+#: Два действительных корня
+#: Один действительный корень
+#: Нет действительных корней
 
 
 from math import sqrt
 from typing import NamedTuple
-
-
-def enter_formula_quadratic_equation() -> float:
-    w = float(input("ax*2 + bx + c = 0"))
-    return w
 
 
 class Coefficients(NamedTuple):
