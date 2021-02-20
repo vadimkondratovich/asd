@@ -10,6 +10,7 @@ python_version = "3.9"
 black = "==20.8b1"
 httpie = "==2.3.0"
 ipython = "==7.19.0"
+jedi = "<0.18.0"
 isort = "==5.6.4"
 pudb = "==2019.2"
 pytest = "==6.2.1"
@@ -17,11 +18,11 @@ pytest-mock = "==3.4.0"
 pytest-selenium = "==2.0.1"
 requests = "==2.25.0"
 toml = "==0.10.2"
-colorama = "*"
+astpretty = {extras = ["typed"], version = "*"}
 
 [packages]
 gunicorn = "==20.0.4"
 psycopg2-binary = "==2.8.6"
 sentry-sdk = "==0.19.5"
 dynaconf = {extras = [ "yaml",], version = "==3.1.2"}
-ipython = "*"
+django = "*"
