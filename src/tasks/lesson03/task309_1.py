@@ -10,6 +10,11 @@
 
 from math import sqrt
 from typing import NamedTuple
+from django.http import HttpRequest
+from django.http import HttpResponse
+from main.util import render_template
+
+TEMPLATE = "tasks/lesson03/task309_1.html"
 
 
 class Coefficients(NamedTuple):
@@ -26,8 +31,8 @@ def ask_user_to_input_letters() -> Coefficients:
 
 
 class Roots(NamedTuple):
-    x1:float
-    x2:float
+    x1: float
+    x2: float
 
 
 def solution(q: Coefficients) -> Roots:
