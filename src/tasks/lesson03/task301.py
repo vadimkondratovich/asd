@@ -1,12 +1,12 @@
-from django.http import HttpRequest, HttpResponse
-
+from main.custom_types import RequestT
+from main.custom_types import ResponseT
 from main.util import render_template
 
 TEMPLATE = "tasks/lesson03/task301.html"
 
 
-def handler(request: HttpRequest) -> HttpResponse:
-    name = request.GET.get("name")
+def handler(request: RequestT) -> ResponseT:
+    name = request.query.get("name", [""])[0]
 
     context = {
         "input_name": name,
@@ -15,11 +15,6 @@ def handler(request: HttpRequest) -> HttpResponse:
 
     document = render_template(TEMPLATE, context)
 
-    response = HttpResponse(content=document)
+    response = ResponseT(payload=document)
 
     return response
-
-
-if __name__ == '__main__':
-    x = render_template(TEMPLATE, {'input_name': 1, 'greeting_name': 2})
-    print(x)
