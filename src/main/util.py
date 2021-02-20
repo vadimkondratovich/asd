@@ -7,7 +7,6 @@ from typing import Union
 from framework.dirs import DIR_TEMPLATES
 
 
-
 def render_template(
     template_path: Union[str, Path],
     context: Optional[Dict] = None,
