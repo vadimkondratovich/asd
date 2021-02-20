@@ -1,3 +1,3 @@
 import pytest
 
-from tasks.lesson03.domzad_two import solution
+from tasks.lesson03.task309_1 import solution

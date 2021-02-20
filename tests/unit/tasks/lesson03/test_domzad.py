@@ -1,6 +1,6 @@
 import pytest
 
-from tasks.lesson03.domzad_two import discriminant
+from tasks.lesson03.task309_1 import discriminant
 
 
 @pytest.mark.unit
