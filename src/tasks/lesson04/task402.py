@@ -1,69 +1,50 @@
-import os
-from pathlib import Path
-from typing import Optional
+import json
+from http import HTTPStatus
+from typing import Dict
 
-from framework.dirs import DIR_STORAGE
-from main.custom_types import RequestT
-from main.custom_types import ResponseT
+from django.http import HttpRequest
+from django.http import HttpResponse
+from django.http import JsonResponse
+
+from main.util import render_template
 
 
-def handler(request: RequestT) -> ResponseT:
-    headers = {}
-    client_name = get_client(request)
-    if not client_name:
-        client_name = create_new_client()
-        headers["Set-Cookie"] = f"name={client_name}"
+def handler(request: HttpRequest) -> HttpResponse:
+    number = get_accumulated(request.session)
+    context = {"number": number}
 
-    client_data = request.query.get("number")[0]
-    result = "invalid input"
-    if client_data == "stop":
-        result = calc_sum(client_name)
-    elif client_data.isnumeric():
-        number = int(client_data)
-        result = add_number(client_name, number)
+    document = render_template("tasks/lesson04/task402.html", context, engine="$")
 
-    response = ResponseT(
-        headers=headers,
-        payload=str(result),
-    )
+    response = HttpResponse(document)
 
     return response
 
 
-def create_new_client() -> str:
-    return os.urandom(8).hex()
+def handler_api(request: HttpRequest) -> JsonResponse:
+    if request.method.lower() == "post":
+        payload = json.loads(request.body)
+        result = payload.get("number")
+        if result:
+            add_number(request.session, result)
+    else:
+        result = get_accumulated(request.session)
+
+    payload = {"ok": True, "result": result}
+
+    response = JsonResponse(payload)
+
+    return response
 
 
-def get_client_file(client_name: str) -> Path:
-    file_path = DIR_STORAGE / f"{client_name}.402.txt"
-
-    return file_path
-
-
-def calc_sum(client_name: str) -> int:
-    data_file = get_client_file(client_name)
-
-    with data_file.open("r") as src:
-        result = sum(int(line.strip()) for line in src.readlines())
+def get_accumulated(session: Dict) -> int:
+    result = session.get("task402", 0)
 
     return result
 
 
-def add_number(client_name: str, number: int) -> int:
-    data_file = get_client_file(client_name)
-
-    with data_file.open("a") as dst:
-        dst.write(f"{number}\n")
+def add_number(session: Dict, number: int) -> int:
+    acc = get_accumulated(session)
+    acc += number
+    session["task402"] = acc
 
     return number
-
-
-def get_client(request: RequestT) -> Optional[str]:
-    cookies = request.headers.get("Cookie")
-    if not cookies:
-        return None
-
-    cookie_name, cookie_value = cookies.split("=")
-    assert cookie_name == "name"
-
-    return cookie_value or None

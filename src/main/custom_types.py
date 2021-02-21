@@ -1,13 +1,19 @@
+import string
 from http import HTTPStatus
+from http.cookies import SimpleCookie
 from typing import Any
 from typing import Callable
 from typing import Dict
+from typing import Generator
 from typing import Optional
+from typing import Tuple
 from typing import Union
 from urllib.parse import parse_qs
 
 from pydantic import Field
 from pydantic.main import BaseModel
+
+from main.sessions import Session
 
 
 class ResponseT(BaseModel):
@@ -15,9 +21,16 @@ class ResponseT(BaseModel):
     content_type: str = "text/html"
     payload: Optional[str] = None
     headers: Dict = Field(default_factory=dict)
+    cookies: SimpleCookie = Field(default_factory=SimpleCookie)
 
     class Config:
         validate_assignment = True
+
+    def headers_items(self) -> Generator[Tuple[str, str], None, None]:
+        yield "Content-Type", self.content_type
+        yield from self.headers.items()
+        for morsel in self.cookies.values():
+            yield "Set-Cookie", morsel.OutputString()
 
 
 class RequestT(BaseModel):
@@ -25,12 +38,16 @@ class RequestT(BaseModel):
     path: str
     query: Dict = Field(default_factory=dict)
     headers: Dict = Field(default_factory=dict)
+    cookies: SimpleCookie = Field(default_factory=SimpleCookie)
+    session: Session = Field(default_factory=Session)
+    payload: str = ""
+
     class Config:
         allow_mutation = False
+        arbitrary_types_allowed = True
 
     def __init__(self, environ: Dict):
         kwargs = self.prepare_kwargs(environ)
-
         super().__init__(**kwargs)
 
     @classmethod
@@ -38,12 +55,18 @@ class RequestT(BaseModel):
         qs = environ["QUERY_STRING"]
         query = parse_qs(qs)
         headers = cls.prepare_headers(environ)
+        cookies = prepare_cookies(headers)
+        session = Session(cookies.get("z43sessionid"))
+        payload = fetch_payload(environ)
 
         kwargs = dict(
             headers=headers,
             method=environ["REQUEST_METHOD"],
             path=environ["PATH_INFO"],
             query=query,
+            session=session,
+            payload=payload,
+            cookies=cookies,
         )
 
         return kwargs
@@ -65,6 +88,36 @@ class RequestT(BaseModel):
         }
 
         return headers
+
+
+def prepare_cookies(headers: Dict[str, str]) -> SimpleCookie:
+    cookies = SimpleCookie()
+    if "Cookie" in headers:
+        cookies.load(headers["Cookie"])
+
+    return cookies
+
+
+def reform_header(header: str) -> str:
+    """
+    Converts "HTTP_SET_COOKIE" -> "Set-Cookie"
+    """
+
+    without_http = header[5:]
+    dash_sep = without_http.replace("_", "-")
+    capitalized = string.capwords(dash_sep, "-")
+
+    return capitalized
+
+
+def fetch_payload(environ: Dict) -> str:
+    src = environ["wsgi.input"]
+    ssp = int(environ.get("CONTENT_LENGTH") or 0)
+    if not ssp:
+        return ""
+
+    data = src.read(ssp).decode()
+    return data
 
 
 HandlerT = Callable[[RequestT], ResponseT]
