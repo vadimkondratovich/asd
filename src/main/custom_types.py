@@ -73,6 +73,14 @@ class RequestT(BaseModel):
 
     @staticmethod
     def prepare_headers(environ: Dict) -> Dict[str, str]:
+        def reform_header(header: str) -> str:
+            without_http = header[5:]
+            words = without_http.split("_")
+            capitalized_words = (word.capitalize() for word in words)
+            reformed = "-".join(capitalized_words)
+
+            return reformed
+
         headers = {
             reform_header(env_key): value
             for env_key, value in environ.items()
