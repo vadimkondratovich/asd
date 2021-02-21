@@ -17,6 +17,7 @@ from tasks.lesson04 import task402
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/v1/tasks/402/", task402.handler_api),
     path("", views.index),
     path("tasks/1/103/", task103.handler),
     path("tasks/3/301/", task301.handler),

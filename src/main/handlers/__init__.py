@@ -22,6 +22,7 @@ from .system_handlers import handle_500
 
 urlpatterns: Dict[str, HandlerT] = {
     "/": index.handler,
+    "/api/v1/tasks/402/": task402.handler_api,
     "/e/": error_test.handler,
     "/tasks/1/103/": task103.handler,
     "/tasks/3/301/": task301.handler,
@@ -39,6 +40,9 @@ urlpatterns: Dict[str, HandlerT] = {
 
 
 def get_handler(request: RequestT) -> HandlerT:
-    handler = urlpatterns.get(request.path, handle_404)
+    handler = urlpatterns.get(
+        request.path,
+        handle_404
+    )
 
     return handler
