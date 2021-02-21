@@ -47,47 +47,39 @@ class RequestT(BaseModel):
         arbitrary_types_allowed = True
 
     def __init__(self, environ: Dict):
-        kwargs = self.prepare_kwargs(environ)
+        kwargs = prepare_kwargs(environ)
         super().__init__(**kwargs)
 
-    @classmethod
-    def prepare_kwargs(cls, environ: Dict) -> Dict[str, Any]:
-        qs = environ["QUERY_STRING"]
-        query = parse_qs(qs)
-        headers = cls.prepare_headers(environ)
-        cookies = prepare_cookies(headers)
-        session = Session(cookies.get("z43sessionid"))
-        payload = fetch_payload(environ)
 
-        kwargs = dict(
-            headers=headers,
-            method=environ["REQUEST_METHOD"],
-            path=environ["PATH_INFO"],
-            query=query,
-            session=session,
-            payload=payload,
-            cookies=cookies,
-        )
+def prepare_kwargs(environ: Dict) -> Dict[str, Any]:
+    qs = environ["QUERY_STRING"]
+    query = parse_qs(qs)
+    headers = prepare_headers(environ)
+    cookies = prepare_cookies(headers)
+    session = Session(cookies.get("z43sessionid"))
+    payload = fetch_payload(environ)
 
-        return kwargs
+    kwargs = dict(
+        cookies=cookies,
+        headers=headers,
+        method=environ["REQUEST_METHOD"],
+        path=environ["PATH_INFO"],
+        payload=payload,
+        query=query,
+        session=session,
+    )
 
-    @staticmethod
-    def prepare_headers(environ: Dict) -> Dict[str, str]:
-        def reform_header(header: str) -> str:
-            without_http = header[5:]
-            words = without_http.split("_")
-            capitalized_words = (word.capitalize() for word in words)
-            reformed = "-".join(capitalized_words)
+    return kwargs
 
-            return reformed
 
-        headers = {
-            reform_header(env_key): value
-            for env_key, value in environ.items()
-            if env_key.startswith("HTTP_")
-        }
+def prepare_headers(environ: Dict) -> Dict[str, str]:
+    headers = {
+        reform_header(env_key): value
+        for env_key, value in environ.items()
+        if env_key.startswith("HTTP_")
+    }
 
-        return headers
+    return headers
 
 
 def prepare_cookies(headers: Dict[str, str]) -> SimpleCookie:

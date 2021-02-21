@@ -88,4 +88,3 @@ class Session:
 
     def headers_list(self) -> List:
         return [("Set-Cookie", f"z43sessionid={self.id}")]
-
