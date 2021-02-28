@@ -64,11 +64,11 @@ class Session:
 
     @staticmethod
     def generate_session_id() -> str:
-         return os.urandom(8).hex()
+        return os.urandom(8).hex()
 
     @property
     def id(self) -> str:
-         return self.__session_id
+        return self.__session_id
 
     @property
     def storage(self) -> SessionStorage:

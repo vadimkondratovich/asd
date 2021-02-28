@@ -22,8 +22,9 @@ pytest-selenium = "==2.0.1"
 gunicorn = "==20.0.4"
 psycopg2-binary = "==2.8.6"
 sentry-sdk = "==0.19.5"
-dynaconf = {extras = [ "yaml",], version = "==3.1.2"}
+dynaconf = {extras = [ "yaml" ], version = "==3.1.2"}
 django = "*"
 pydantic = "==1.7.3"
 requests = "==2.25.1"
 toml = "==0.10.2"
+dj-database-url = "*"

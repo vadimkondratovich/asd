@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-
+from django.views.decorators.csrf import csrf_exempt
 from project import views
 from tasks.lesson01 import task103
 from tasks.lesson03 import task301
@@ -30,5 +30,5 @@ urlpatterns = [
     path("tasks/3/309/", task309.handler),
     path("tasks/3/310/", task310.handler),
     path("tasks/3/311/", task311.handler),
-    path("tasks/3/402/", task402.handler),
+    path("tasks/4/402/", csrf_exempt(task402.handler)),
 ]
