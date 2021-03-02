@@ -15,3 +15,5 @@ tests/**/*.html
 tests/**/*.png
 venv/
 storage/
+*.db
+*.sqlite3

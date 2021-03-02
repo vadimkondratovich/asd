@@ -18,7 +18,7 @@ format:
 
 
 .PHONY: test
-test:
+test::
 	$(call log, running tests)
 	$(RUN) pytest
 	$(RUN) isort --virtual-env="$(DIR_VENV)" --check-only "$(DIR_SRC)" "$(DIR_TESTS)"
@@ -33,7 +33,7 @@ release: db data
 .PHONY: sh
 sh:
 	$(call log, starting Python shell)
-	$(RUN) ipython
+	$(RUN) python src/manage.py shell
 
 
 .PHONY: venv
