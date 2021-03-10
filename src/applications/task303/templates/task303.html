@@ -17,15 +17,15 @@
             Поменять местами слова, добавить восклицательный знак в начало и конец,
             вывести итоговое предложение на экран.
         </p>
-        <form>
+        <form action="/tasks/303/" method="post">
             <label for="id_sentence">Предложение:</label>
-            <input id="id_sentence" name="sentence" placeholder="два слова" type="text" value="{sentence}">
-            <button type="submit">Выполнить</button>
+            <input id="id_sentence" name="sentence" placeholder="два слова" type="text" value="{{ sentence }}">
+            <button id="id_submit" type="submit">Выполнить</button>
         </form>
     </section>
     <section>
         <h2>Результат</h2>
-        <p>{result}</p>
+        <p><span id="id_result">{{ result }}</span></p>
     </section>
 </article>
 </body>
